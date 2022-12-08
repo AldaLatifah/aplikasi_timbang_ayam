@@ -11,6 +11,7 @@ class HarvestCard extends StatelessWidget {
       children: [
         InkWell(
           onTap: () {
+            Get.to(HarvestPage());
             // Navigator.push(context, MaterialPageRoute(builder: (context) {
             //   return HarvestPage();
             // }));

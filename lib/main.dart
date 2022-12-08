@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -69,21 +70,23 @@ class MyApp extends StatelessWidget {
 //     return Scaffold(
 //       appBar: AppBar(title: Text('BLE TEST')),
 //       body: Column(children: [
-      //   SizedBox(height: 50),
-      //   Obx((() => Text('${c.status}'))),
-      //   SizedBox(height: 50),
-      //   Obx((() => Text('${c.temperature}'))),
-      //   SizedBox(height: 50),
-      //   Obx(((() => Container(
-      //       child: c.status != 'connected'
-      //           ? ElevatedButton(onPressed: c.connect, child: Text("CONNECt"))
-      //           : null)))),
-      //   ElevatedButton(
-      //       onPressed: () {
-      //         Get.to(DetailPage(angka: c.temperature.toString()));
-      //       },
-      //       child: Text("Terima")),
-      // ]),
+//         SizedBox(height: 50),
+//         Obx((() => Text('${c.status}'))),
+//         SizedBox(height: 50),
+//         Obx((() => Text('${c.temperature}'))),
+//         SizedBox(height: 50),
+//         Obx(((() => Container(
+//             child: c.status != 'connected'
+//                 ? ElevatedButton(onPressed: c.connect, child: Text("CONNECt"))
+//                 : null)))),
+//         ElevatedButton(
+//             onPressed: () {
+//               Get.to(DetailPage(angka: c.temperature.toString()));
+//             },
+//             child: Text("Terima")),
+//       ]),
 //     );
 //   }
 // }
+
+

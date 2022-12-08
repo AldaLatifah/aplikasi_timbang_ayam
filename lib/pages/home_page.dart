@@ -211,27 +211,112 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ],
                       ),
-                      Container(
-                        height: 90,
-                        child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              FutureBuilder<List<Cage>>(
-                                future: cage,
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    return Row(
-                                        children: snapshot.data!
-                                            .map((todo) =>
-                                                CageCard(name: todo.name))
-                                            .toList());
-                                  } else {
-                                    return SizedBox();
-                                  }
-                                },
-                              )
-                            ]),
+                      SizedBox(
+                        height: 10,
                       ),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            CageCard(
+                              name: "Kandang 1",
+                            ),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            CageCard(
+                              name: "Kandang 1",
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(top: 10),
+                        alignment: Alignment.topLeft,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Panen Mendatang",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 20,
+                                        color: Color(0xff386829),
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    Text(
+                                      "2 Panen",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 15,
+                                        color: Color(0xffC8C8C8),
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                // Container(
+                                //   width: 133,
+                                //   height: 27,
+                                //   decoration: BoxDecoration(
+                                //       color: Color(0xff75A479),
+                                //       borderRadius:
+                                //           BorderRadius.all(Radius.circular(8))),
+                                //   child: Row(
+                                //     mainAxisAlignment: MainAxisAlignment.center,
+                                //     children: [
+                                //       Icon(
+                                //         Icons.add_circle_outline,
+                                //         size: 14,
+                                //         color: Colors.white,
+                                //       ),
+                                //       Text(
+                                //         "Tambah Kandang",
+                                //         style: GoogleFonts.poppins(
+                                //             color: Colors.white,
+                                //             fontWeight: FontWeight.normal,
+                                //             fontSize: 10),
+                                //       )
+                                //     ],
+                                //   ),
+                                // ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  HarvestCard(),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                  HarvestCard(),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                  HarvestCard(),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                  HarvestCard(),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 )

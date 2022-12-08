@@ -10,7 +10,7 @@ class BleController {
   late StreamSubscription<ConnectionStateUpdate> connection;
   late QualifiedCharacteristic rx;
   RxString status = 'not connected'.obs;
-  RxString temperature = ' '.obs;
+  RxString weight = ' '.obs;
 
   void connect() async {
     status.value = 'connecting...';
@@ -18,8 +18,7 @@ class BleController {
     connection = frb.connectToDevice(id: '8C:AA:B5:85:B0:3A').listen((state) {
       print(state.connectionState);
       if (state.connectionState == DeviceConnectionState.connected) {
-        status.value = 'Connected!';
-
+        status.value = 'success';
         rx = QualifiedCharacteristic(
             serviceId: Uuid.parse("4fafc201-1fb5-459e-8fcc-c5c9c331914b"),
             characteristicId:
@@ -33,12 +32,17 @@ class BleController {
 
         frb.subscribeToCharacteristic(rx).listen((data) {
           print("tes subscribe");
-          temperature.value = String.fromCharCodes(data);
+          weight.value = String.fromCharCodes(data);
 
-          print(temperature.value);
+          print(weight.value);
         });
+      } else if (state.connectionState == DeviceConnectionState.disconnecting) {
+        status.value = 'failed';
       }
     });
+
+    if (status.value == 'success') {}
+
     // frb.connectToDevice(id: '8C:AA:B5:85:B0:3A').listen((state) {
     //   print("tes lagi");
     //   print(state.connectionState);
