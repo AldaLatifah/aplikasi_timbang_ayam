@@ -24,29 +24,31 @@ class _CameraPageState extends State<CameraPage> {
 
   @override
   Widget build(BuildContext context) {
-    final BleController c = Get.put(BleController());
+    // final BleController c = Get.put(BleController());
 
-    return Scaffold(
-        body: Stack(
-          children: [
-            FutureBuilder<void>(
-              future: initializeCamera(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return CameraPreview(controller);
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
-            ),
-          ],
-        ),
-        // jika statusnya != success maka jalankan c.connect,
-        //tapi jika statusnya itu sama dengan success maka ambil nilai c.temperature aja
-        floatingActionButton: Obx(
-          () => FloatingActionButton(
+    return GetBuilder<BleController>(
+      builder: (blecontroller) {
+        return Scaffold(
+          body: Stack(
+            children: [
+              FutureBuilder<void>(
+                future: initializeCamera(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return CameraPreview(controller);
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                },
+              ),
+            ],
+          ),
+          // jika statusnya != success maka jalankan c.connect,
+          //tapi jika statusnya itu sama dengan success maka ambil nilai c.weight aja
+          floatingActionButton: FloatingActionButton(
             onPressed: () async {
-              if (c.status == 'success') {
+              print(blecontroller.status);
+              if (blecontroller.status == 'success') {
                 try {
                   await initializeCamera();
 
@@ -57,7 +59,7 @@ class _CameraPageState extends State<CameraPage> {
                   await Get.off(
                     DisplayResultCameraPage(
                       imagePath: image.path,
-                      weight: c.weight.toString(),
+                      weight: blecontroller.weight.toString(),
                     ),
                   );
                 } catch (e) {
@@ -65,11 +67,13 @@ class _CameraPageState extends State<CameraPage> {
                 }
                 // c.connect();
               } else {
-                c.connect();
+                blecontroller.connect();
               }
             },
             child: const Icon(Icons.camera_alt),
           ),
-        ));
+        );
+      },
+    );
   }
 }

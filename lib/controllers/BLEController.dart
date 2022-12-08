@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-class BleController {
+class BleController extends GetxController {
   final frb = FlutterReactiveBle();
   late StreamSubscription<ConnectionStateUpdate> connection;
   late QualifiedCharacteristic rx;
@@ -14,6 +14,7 @@ class BleController {
 
   void connect() async {
     status.value = 'connecting...';
+
     print("tes");
     connection = frb.connectToDevice(id: '8C:AA:B5:85:B0:3A').listen((state) {
       print(state.connectionState);
