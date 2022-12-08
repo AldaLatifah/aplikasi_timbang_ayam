@@ -10,6 +10,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter_getx_reactive_ble/controllers/BLEController.dart';
 import 'package:flutter_getx_reactive_ble/services/services.dart';
 import 'package:flutter_getx_reactive_ble/widgets/widgets.dart';
+import 'package:flutter_getx_reactive_ble/models/models.dart';
 
 part 'main_page.dart';
 part 'splash_screen.dart';

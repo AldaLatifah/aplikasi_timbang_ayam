@@ -3,7 +3,8 @@
 part of 'widgets.dart';
 
 class CageCard extends StatelessWidget {
-  const CageCard({Key? key}) : super(key: key);
+  final String name;
+  const CageCard({Key? key, required this.name}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class CageCard extends StatelessWidget {
           ),
         ),
         Text(
-          "Kandang A",
+          name,
           style: GoogleFonts.poppins(
               fontSize: 14,
               fontWeight: FontWeight.w400,

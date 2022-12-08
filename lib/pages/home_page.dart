@@ -9,6 +9,23 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  CageService cageService = CageService();
+  TextEditingController namaKandangController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    refreshCage();
+    super.initState();
+  }
+
+  late Future<List<Cage>> cage;
+  void refreshCage() {
+    setState(() {
+      cage = cageService.fetchMemos();
+    });
+  }
+
   //POPUP DIALOG TAMBAH DATA KANDANG
   Widget _buildPopupDialog(BuildContext context) {
     return AlertDialog(
@@ -31,6 +48,7 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: EdgeInsets.only(left: 2.0),
             child: TextField(
+              controller: namaKandangController,
               style: GoogleFonts.poppins(
                 color: Colors.grey,
                 fontSize: 15,
@@ -57,8 +75,10 @@ class _HomePageState extends State<HomePage> {
           child: Text('Cancel'),
         ),
         TextButton(
-          onPressed: () =>
-              Navigator.pop(context, 'OK'), //masuk ke service insert data cage
+          onPressed: () async {
+            await cageService.addItem(Cage(namaKandangController.text));
+            Get.to(MainPage());
+          }, //masuk ke service insert data cage
           child: Text('OK'),
         ),
       ],
@@ -190,6 +210,27 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ],
+                      ),
+                      Container(
+                        height: 90,
+                        child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              FutureBuilder<List<Cage>>(
+                                future: cage,
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    return Row(
+                                        children: snapshot.data!
+                                            .map((todo) =>
+                                                CageCard(name: todo.name))
+                                            .toList());
+                                  } else {
+                                    return SizedBox();
+                                  }
+                                },
+                              )
+                            ]),
                       ),
                     ],
                   ),
