@@ -1,4 +1,4 @@
-# Flutter Reactive Ble + Getx
+# Aplikasi Timbangan Ayam
 
 A new Flutter project.
 
