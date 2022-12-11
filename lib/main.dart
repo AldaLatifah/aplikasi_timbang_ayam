@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
           builder: (c, snapshot) {
             final state = snapshot.data;
             if (state == BluetoothState.on) {
-              return const ConnectBluetoohPage();
+              return const MainPage();
             }
             return _buildPopupDialog(context);
           }),

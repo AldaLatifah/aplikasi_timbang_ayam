@@ -1,24 +1,67 @@
 part of 'pages.dart';
 
 class CameraPage extends StatefulWidget {
-  const CameraPage({Key? key}) : super(key: key);
+  final CameraDescription camera;
+  const CameraPage({Key? key, required this.camera}) : super(key: key);
   @override
   State<CameraPage> createState() => _CameraPageState();
 }
 
 class _CameraPageState extends State<CameraPage> {
-  late CameraController controller;
+  late CameraController _controller;
+  late Future<void> _initializeControllerFuture;
 
-  Future<void> initializeCamera() async {
-    var cameras = await availableCameras();
-    final firstCamera = cameras.first;
-    controller = CameraController(firstCamera, ResolutionPreset.max);
-    await controller.initialize();
+  var isCameraReady = false;
+  var showCapturedPhoto = false;
+  var ImagePath;
+
+  // Future<void> initializeCamera() async {
+  //   var cameras = await availableCameras();
+  //   final firstCamera = cameras.first;
+  //   controller = CameraController(firstCamera, ResolutionPreset.max);
+  //   await controller.initialize();
+  // }
+
+  // Future<void> _initializeCamera() async {
+
+  //   _controller = CameraController(firstCamera, ResolutionPreset.high);
+  //   _initializeControllerFuture = _controller.initialize();
+  //   if (!mounted) {
+  //     return;
+  //   }
+  //   setState(() {
+  //     isCameraReady = true;
+  //   });
+  // }
+
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   if (state == AppLifecycleState.resumed) {
+  //     _controller != null
+  //         ? _initializeControllerFuture = _controller.initialize()
+  //         : null; //on pause camera is disposed, so we need to call again "issue is only for android"
+  //   }
+  // }
+  final BleController c = Get.put(BleController());
+
+  @override
+  void initState() {
+    _controller = CameraController(
+      // Get a specific camera from the list of available cameras.
+      widget.camera,
+      // Define the resolution to use.
+      ResolutionPreset.max,
+    );
+
+    // Next, initialize the controller. This returns a Future.
+    _initializeControllerFuture = _controller.initialize();
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -28,35 +71,40 @@ class _CameraPageState extends State<CameraPage> {
   String status = 'not connected';
   String temperature = '';
 
-  void connect() {
-    setState(() {
-      status = 'connecting';
-    });
+  // Future<void> test() async {
 
-    connection = frb.connectToDevice(id: '8C:AA:B5:8C:41:FE').listen((state) {
-      print(state.connectionState);
-      if (state.connectionState == DeviceConnectionState.connected) {
-        setState(() {
-          status = 'success';
-        });
-      } else {
-        setState(() {
-          status = 'failed';
-        });
-      }
-    });
-  }
+  // }
+  // void connect() {
+  //   setState(() {
+  //     status = 'connecting';
+  //   });
+
+  //   // 8C:AA:B5:8C:41:FE Bluetooth Timbangan
+  //   connection = frb.connectToDevice(id: '8C:AA:B5:85:B0:3A').listen((state) {
+  //     print(state.connectionState);
+  //     if (state.connectionState == DeviceConnectionState.connected) {
+  //       setState(() {
+  //         status = 'success';
+  //       });
+  //     } else {
+  //       setState(() {
+  //         status = 'failed';
+  //       });
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
+    c.read();
     return Scaffold(
       body: Stack(
         children: [
           FutureBuilder<void>(
-            future: initializeCamera(),
+            future: _initializeControllerFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                return CameraPreview(controller);
+                return CameraPreview(_controller);
               } else {
                 return const Center(child: CircularProgressIndicator());
               }
@@ -64,39 +112,25 @@ class _CameraPageState extends State<CameraPage> {
           ),
         ],
       ),
+
       // jika statusnya != success maka jalankan c.connect,
       //tapi jika statusnya itu sama dengan success maka ambil nilai c.weight aja
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          rx = QualifiedCharacteristic(
-              serviceId: Uuid.parse("4fafc201-1fb5-459e-8fcc-c5c9c331914b"),
-              characteristicId:
-                  Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26a8"),
-              deviceId: '8C:AA:B5:8C:41:FE');
-
-          frb.subscribeToCharacteristic(rx).listen((data) {
-            print("tes subscribe");
-            setState(() {
-              temperature = String.fromCharCodes(data);
-            });
-          });
           try {
-            await initializeCamera();
-
-            final image = await controller.takePicture();
+            await _initializeControllerFuture;
+            final image = await _controller.takePicture();
 
             if (!mounted) return;
-
             await Get.off(
               DisplayResultCameraPage(
                 imagePath: image.path,
-                weight: temperature.toString(),
+                weight: c.weight.toString(),
               ),
             );
           } catch (e) {
             print(e);
           }
-          // c.connect();
         },
         child: const Icon(Icons.camera_alt),
       ),

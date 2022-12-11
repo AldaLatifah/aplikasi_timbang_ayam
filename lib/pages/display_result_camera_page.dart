@@ -26,8 +26,15 @@ class DisplayResultCameraPage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
-                onTap: () {
-                  Get.to(CameraPage());
+                onTap: () async {
+                  // Obtain a list of the available cameras on the device.
+                  final cameras = await availableCameras();
+
+                  // Get a specific camera from the list of available cameras.
+                  final firstCamera = cameras.first;
+                  Get.offAll(CameraPage(
+                    camera: firstCamera,
+                  ));
                 },
                 child: Container(
                   decoration: BoxDecoration(

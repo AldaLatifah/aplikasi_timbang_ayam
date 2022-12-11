@@ -18,7 +18,8 @@ class _ConnectBluetoohPageState extends State<ConnectBluetoohPage> {
       status = 'connecting';
     });
 
-    connection = frb.connectToDevice(id: '8C:AA:B5:8C:41:FE').listen((state) {
+    // 8C:AA:B5:8C:41:FE Bluetooth Timbangan
+    connection = frb.connectToDevice(id: '8C:AA:B5:85:B0:3A').listen((state) {
       print(state.connectionState);
       if (state.connectionState == DeviceConnectionState.connected) {
         setState(() {
