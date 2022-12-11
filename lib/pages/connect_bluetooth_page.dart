@@ -8,34 +8,80 @@ class ConnectBluetoohPage extends StatefulWidget {
 }
 
 class _ConnectBluetoohPageState extends State<ConnectBluetoohPage> {
-  final BleController c = Get.put(BleController());
+  final frb = FlutterReactiveBle();
+  late StreamSubscription<ConnectionStateUpdate> connection;
+  late QualifiedCharacteristic rx;
+  String status = 'not connected';
+
+  void connect() {
+    setState(() {
+      status = 'connecting';
+    });
+
+    connection = frb.connectToDevice(id: '8C:AA:B5:8C:41:FE').listen((state) {
+      print(state.connectionState);
+      if (state.connectionState == DeviceConnectionState.connected) {
+        setState(() {
+          status = 'success';
+        });
+        Get.to(MainPage());
+      } else {
+        setState(() {
+          status = 'failed';
+        });
+      }
+    });
+  }
+
+  // void scan() {
+  //   frb.scanForDevices(
+  //       withServices: [Uuid.parse('4fafc201-1fb5-459e-8fcc-c5c9c331914b')],
+  //       scanMode: ScanMode.lowLatency,
+  //       requireLocationServicesEnabled: false).listen((device) {
+  //     if (device.serviceUuids ==
+  //         Uuid.parse("4fafc201-1fb5-459e-8fcc-c5c9c331914b")) {
+  //       print('found device');
+  //     }
+  //     //code for handling results
+  //   });
+  // }
+
+  @override
+  void initState() {
+    connect();
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Obx(((() => c.status != 'connected'
-        ? Scaffold(
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      c.connect();
-                      if (c.status == 'connected') {
-                        Get.snackbar("BERHASIL", "Selamat Menimbang Ayam");
-                        Get.to(MainPage());
-                      } else {
-                        Get.snackbar("GAGAL", "Silahkan Coba Lagi");
-                        Get.to(ConnectBluetoohPage());
-                      }
-                    },
-                    child: Text('Sambungkan'),
-                  ),
-                )
-              ],
-            ),
-          )
-        : const MainPage())));
+    if (status != 'success') {
+      return Scaffold(
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              alignment: Alignment.center,
+              child: ElevatedButton(
+                onPressed: () {
+                  connect();
+                  if (status == 'success') {
+                    Get.snackbar("BERHASIL", "Selamat Menimbang Ayam");
+                    Get.to(MainPage());
+                  } else {
+                    Get.snackbar("GAGAL", "Silahkan Coba Lagi");
+                    Get.to(ConnectBluetoohPage());
+                  }
+                },
+                child: Text('Sambungkan'),
+              ),
+            )
+          ],
+        ),
+      );
+    } else {
+      return MainPage();
+    }
   }
 }
 

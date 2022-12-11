@@ -9,7 +9,15 @@ class HarvestDetailCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Get.to(CameraPage());
+        // Get.to(CameraPage());
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) {
+              return CameraPage();
+            },
+          ),
+        );
       },
       child: Column(
         children: [
