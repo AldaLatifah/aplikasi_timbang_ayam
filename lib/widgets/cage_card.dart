@@ -4,7 +4,9 @@ part of 'widgets.dart';
 
 class CageCard extends StatelessWidget {
   final String name;
-  const CageCard({Key? key, required this.name}) : super(key: key);
+  final String lantai;
+  const CageCard({Key? key, required this.name, required this.lantai})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,16 +15,20 @@ class CageCard extends StatelessWidget {
         InkWell(
           onTap: () {},
           child: Container(
+            alignment: Alignment.center,
             width: 60,
             height: 60,
             decoration: BoxDecoration(
               color: Color(0xff75A479),
               borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
-            child: Icon(
-              Icons.abc,
-              color: Colors.white,
-              size: 22,
+            child: Text(
+              lantai,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white),
             ),
           ),
         ),

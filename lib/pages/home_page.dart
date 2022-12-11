@@ -11,6 +11,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   CageService cageService = CageService();
   TextEditingController namaKandangController = TextEditingController();
+  TextEditingController lantaiKandangController = TextEditingController();
+  int? _selectedIndex, index;
 
   @override
   void initState() {
@@ -67,6 +69,43 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+          SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 2.0),
+            child: Text(
+              'Lantai Kandang',
+              style: GoogleFonts.poppins(
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
+                fontSize: 15,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 2.0),
+            child: TextField(
+              controller: lantaiKandangController,
+              style: GoogleFonts.poppins(
+                color: Colors.grey,
+                fontSize: 15,
+                fontWeight: FontWeight.w300,
+              ),
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                hintText: 'Tulis Lantai Kandang',
+                labelStyle: GoogleFonts.poppins(
+                  color: Colors.grey,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w300,
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
       actions: [
@@ -76,7 +115,8 @@ class _HomePageState extends State<HomePage> {
         ),
         TextButton(
           onPressed: () async {
-            await cageService.addItem(Cage(namaKandangController.text));
+            await cageService.addItem(
+                Cage(namaKandangController.text, lantaiKandangController.text));
             Get.to(MainPage());
           }, //masuk ke service insert data cage
           child: Text('OK'),
@@ -84,6 +124,97 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
+
+  //WIDGET KANDANG
+
+  Widget _buildDataCage(BuildContext context, Cage cage) {
+    return Stack(children: [
+      Column(
+        children: [
+          InkWell(
+            onTap: () {
+              setState(() {
+                _selectedIndex = cage.id;
+              });
+            },
+            child: Container(
+              alignment: Alignment.center,
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                color: Color(0xff75A479),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+              ),
+              child: Text(
+                cage.lantai,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white),
+              ),
+            ),
+          ),
+          Text(
+            cage.name,
+            style: GoogleFonts.poppins(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Color(0xff386829)),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          _selectedIndex == index
+              ? Container(
+                  color: Colors.green.shade900,
+                  width: 50,
+                  height: 2,
+                )
+              : Container(),
+        ],
+      ),
+      Align(alignment: Alignment.topLeft, child: _simplePopup(cage)),
+    ]);
+  }
+
+  Widget _simplePopup(Cage cage) => PopupMenuButton<int>(
+      onSelected: (x) {
+        // id = memb.perusahaan_id;
+        // url = memb.perusahaan.picture_path;
+        // typeUser = memb.type_user;
+        // user_id = memb.user.id;
+        if (x == 1) {
+          Get.to(CagePage(
+            cage: cage,
+          ));
+        }
+        // else{
+        //   Get.to(RutinitasPage(id:id, user_id: user_id,  url:url, typeUser: typeUser));
+        // }
+      },
+      elevation: 40,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      itemBuilder: (context) => [
+            PopupMenuItem(
+              value: 1,
+              child: Text("Detail Kandang"),
+            ),
+          ],
+      child: Container(
+        width: 15,
+        height: 15,
+        decoration: BoxDecoration(
+          color: Colors.green, // border color
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: Icon(
+            Icons.edit,
+            size: 10,
+          ),
+        ),
+      ));
 
   @override
   Widget build(BuildContext context) {
@@ -215,21 +346,27 @@ class _HomePageState extends State<HomePage> {
                         height: 10,
                       ),
                       SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            CageCard(
-                              name: "Kandang 1",
-                            ),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            CageCard(
-                              name: "Kandang 1",
-                            ),
-                          ],
-                        ),
-                      ),
+                          scrollDirection: Axis.horizontal,
+                          child: FutureBuilder<List<Cage>>(
+                            future: cage,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return Row(
+                                    children: snapshot.data!.map((todo) {
+                                  index = todo.id;
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                      // left: (todo.id == 1) ? 0 : 0,
+                                      right: 10,
+                                    ),
+                                    child: _buildDataCage(context, todo),
+                                  );
+                                }).toList());
+                              } else {
+                                return SizedBox();
+                              }
+                            },
+                          )),
                       SizedBox(
                         height: 20,
                       ),

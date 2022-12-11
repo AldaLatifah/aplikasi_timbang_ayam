@@ -1,31 +1,16 @@
 part of 'services.dart';
 
 class CageService {
-  Future<Database> init() async {
-    Directory directory =
-        await getApplicationDocumentsDirectory(); //returns a directory which stores permanent files
-    final path =
-        join(directory.path, "timbang_ayam.db"); //create path to database
-
-    return await openDatabase(
-        //open the database or create a database if there isn't any
-        path,
-        version: 1, onCreate: (Database db, int version) async {
-      await db.execute("""
-          CREATE TABLE cages (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          name TEXT)""");
-    });
-  }
-
   static const name = 'name';
+
+  DBHelper _dbHelper = DBHelper();
 
   Future<int> addItem(Cage item) async {
     //returns number of items inserted as an integer
 
-    final db = await init(); //open database
-    final sql = '''INSERT INTO cages(name) VALUES (?)''';
-    List<dynamic> params = [item.name];
+    final db = await _dbHelper.init(); //open database
+    final sql = '''INSERT INTO cages(name, lantai) VALUES (?,?)''';
+    List<dynamic> params = [item.name, item.lantai];
     final result = await db.rawInsert(sql, params);
     return result;
   }
@@ -33,7 +18,7 @@ class CageService {
   Future<List<Cage>> fetchMemos() async {
     //returns the memos as a list (array)
 
-    final db = await init();
+    final db = await _dbHelper.init();
     final maps = await db
         .query("cages"); //query all the rows in a table as an array of maps
 
