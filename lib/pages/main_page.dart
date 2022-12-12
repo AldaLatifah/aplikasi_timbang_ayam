@@ -29,7 +29,7 @@ class _MainPageState extends State<MainPage> {
 
   final List<Widget> _myPages = [
     HomePage(),
-    HomePage(),
+    SppaPage(),
     HomePage(),
     HomePage(),
   ];

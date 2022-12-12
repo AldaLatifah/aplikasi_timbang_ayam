@@ -5,12 +5,18 @@ part of 'pages.dart';
 class DisplayResultCameraPage extends StatelessWidget {
   final String imagePath;
   final String weight;
+  final int id_sppa;
   const DisplayResultCameraPage(
-      {Key? key, required this.imagePath, required this.weight})
+      {Key? key,
+      required this.imagePath,
+      required this.weight,
+      required this.id_sppa})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController ekorController = TextEditingController();
+    ScaleService scaleService = ScaleService();
     return Scaffold(
       body: Stack(
         children: [
@@ -33,6 +39,7 @@ class DisplayResultCameraPage extends StatelessWidget {
                   // Get a specific camera from the list of available cameras.
                   final firstCamera = cameras.first;
                   Get.offAll(CameraPage(
+                    id_sppa: id_sppa,
                     camera: firstCamera,
                   ));
                 },
@@ -93,11 +100,13 @@ class DisplayResultCameraPage extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 16.0, bottom: 10.0),
                     child: TextField(
+                      controller: ekorController,
                       style: GoogleFonts.poppins(
                         color: Colors.grey,
                         fontSize: 15,
                         fontWeight: FontWeight.w300,
                       ),
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         hintText: 'Tulis Jumlah Ayam',
                         labelStyle: GoogleFonts.poppins(
@@ -114,20 +123,30 @@ class DisplayResultCameraPage extends StatelessWidget {
                   Center(
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Container(
-                        width: 200,
-                        height: 43,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Colors.teal.shade900,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () {},
-                              child: SizedBox(
+                      child: GestureDetector(
+                        onTap: () async {
+                          await scaleService.addItem(
+                            Scale(
+                              int.parse(ekorController.text),
+                              int.parse(weight),
+                              imagePath,
+                              id_sppa,
+                            ),
+                          );
+                          Get.to(DetailPage(angka: imagePath));
+                        },
+                        child: Container(
+                          width: 200,
+                          height: 43,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.teal.shade900,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
                                 width: 170,
                                 height: 22,
                                 child: Text(
@@ -139,8 +158,8 @@ class DisplayResultCameraPage extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),

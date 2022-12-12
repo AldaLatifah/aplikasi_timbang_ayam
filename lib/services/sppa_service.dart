@@ -54,17 +54,17 @@ class SppaService {
     return todos;
   }
 
-  Future<List<Harvest>> fetchData(int id_cage) async {
+  Future<List<Sppa>> fetchData(int id_harvest) async {
     //returns the memos as a list (array)
 
     final db = await _dbHelper.init();
-    final sql = '''SELECT * FROM harvest WHERE id_cage = $id_cage''';
+    final sql = '''SELECT * FROM sppa WHERE id_harvest = $id_harvest''';
     final maps = await db
         .rawQuery(sql); //query all the rows in a table as an array of maps
 
-    List<Harvest> todos = [];
+    List<Sppa> todos = [];
     for (final node in maps) {
-      final todo = Harvest.fromMap(node);
+      final todo = Sppa.fromMap(node);
       todos.add(todo);
     }
     return todos;

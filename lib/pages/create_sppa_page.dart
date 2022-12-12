@@ -82,7 +82,7 @@ class _CreateSppaPageState extends State<CreateSppaPage> {
                         child: TextField(
                           controller: namaCustomerController,
                           style: GoogleFonts.poppins(
-                            color: Colors.grey,
+                            color: Colors.black,
                             fontSize: 15,
                             fontWeight: FontWeight.w300,
                           ),
@@ -108,7 +108,7 @@ class _CreateSppaPageState extends State<CreateSppaPage> {
                         child: TextField(
                           controller: peternakController,
                           style: GoogleFonts.poppins(
-                            color: Colors.grey,
+                            color: Colors.black,
                             fontSize: 15,
                             fontWeight: FontWeight.w300,
                           ),
@@ -134,7 +134,7 @@ class _CreateSppaPageState extends State<CreateSppaPage> {
                         child: TextField(
                           controller: ekorController,
                           style: GoogleFonts.poppins(
-                            color: Colors.grey,
+                            color: Colors.black,
                             fontSize: 15,
                             fontWeight: FontWeight.w300,
                           ),
@@ -161,7 +161,7 @@ class _CreateSppaPageState extends State<CreateSppaPage> {
                         child: TextField(
                           controller: kgController,
                           style: GoogleFonts.poppins(
-                            color: Colors.grey,
+                            color: Colors.black,
                             fontSize: 15,
                             fontWeight: FontWeight.w300,
                           ),
@@ -188,7 +188,7 @@ class _CreateSppaPageState extends State<CreateSppaPage> {
                         child: TextField(
                           controller: alamatController,
                           style: GoogleFonts.poppins(
-                            color: Colors.grey,
+                            color: Colors.black,
                             fontSize: 15,
                             fontWeight: FontWeight.w300,
                           ),
@@ -214,7 +214,7 @@ class _CreateSppaPageState extends State<CreateSppaPage> {
                         child: TextField(
                           controller: noTrukController,
                           style: GoogleFonts.poppins(
-                            color: Colors.grey,
+                            color: Colors.black,
                             fontSize: 15,
                             fontWeight: FontWeight.w300,
                           ),
@@ -240,7 +240,7 @@ class _CreateSppaPageState extends State<CreateSppaPage> {
                         child: TextField(
                           controller: namaSopirController,
                           style: GoogleFonts.poppins(
-                            color: Colors.grey,
+                            color: Colors.black,
                             fontSize: 15,
                             fontWeight: FontWeight.w300,
                           ),
@@ -266,7 +266,7 @@ class _CreateSppaPageState extends State<CreateSppaPage> {
                         child: TextField(
                           controller: tglController,
                           style: GoogleFonts.poppins(
-                            color: Colors.grey,
+                            color: Colors.black,
                             fontSize: 15,
                             fontWeight: FontWeight.w300,
                           ),
@@ -317,7 +317,12 @@ class _CreateSppaPageState extends State<CreateSppaPage> {
                         width: MediaQuery.of(context).size.width,
                         child: RaisedButton(
                           onPressed: () async {
-                            int no_sppa = new Random().nextInt(100);
+                            var rnd = new Random();
+                            var next = rnd.nextDouble() * 1000000;
+                            while (next < 100000) {
+                              next *= 10;
+                            }
+                            int no_sppa = next.toInt();
                             DateTime now = DateTime.now();
                             var formatter = new DateFormat('dd-MM-yyyy');
                             String date = formatter.format(now);

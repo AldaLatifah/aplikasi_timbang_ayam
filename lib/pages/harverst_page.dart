@@ -23,7 +23,7 @@ class _HarvestPageState extends State<HarvestPage> {
 
   void refreshPeriod() {
     setState(() {
-      sppa = sppaService.fetchMemos();
+      sppa = sppaService.fetchData(widget.harvest.id);
     });
   }
 

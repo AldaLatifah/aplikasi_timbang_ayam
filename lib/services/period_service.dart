@@ -52,4 +52,20 @@ class PeriodService {
     }
     return todos;
   }
+
+  Future<List<Period>> fetchData(int id_cage) async {
+    //returns the memos as a list (array)
+
+    final db = await _dbHelper.init();
+    final sql = '''SELECT * FROM periods WHERE id_cage = $id_cage''';
+    final maps = await db
+        .rawQuery(sql); //query all the rows in a table as an array of maps
+
+    List<Period> todos = [];
+    for (final node in maps) {
+      final todo = Period.fromMap(node);
+      todos.add(todo);
+    }
+    return todos;
+  }
 }

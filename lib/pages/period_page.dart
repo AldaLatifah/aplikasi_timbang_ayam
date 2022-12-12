@@ -29,7 +29,7 @@ class _PeriodPageState extends State<PeriodPage> {
   late Future<List<Harvest>> harvest;
   void refreshPeriod() {
     setState(() {
-      harvest = harvestService.fetchMemos();
+      harvest = harvestService.fetchDataPeriode(widget.period.id);
     });
   }
 

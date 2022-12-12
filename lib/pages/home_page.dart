@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
 part of 'pages.dart';
 
 class HomePage extends StatefulWidget {
@@ -126,7 +126,14 @@ class _HomePageState extends State<HomePage> {
           onPressed: () async {
             await cageService.addItem(
                 Cage(namaKandangController.text, lantaiKandangController.text));
-            Get.to(MainPage());
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (_) {
+                  return HomePage();
+                },
+              ),
+            );
           }, //masuk ke service insert data cage
           child: Text('OK'),
         ),

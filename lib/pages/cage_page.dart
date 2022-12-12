@@ -28,7 +28,7 @@ class _CagePageState extends State<CagePage> {
   late Future<List<Period>> period;
   void refreshPeriod() {
     setState(() {
-      period = periodService.fetchMemos();
+      period = periodService.fetchData(widget.cage.id);
     });
   }
 

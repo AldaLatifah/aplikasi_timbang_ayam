@@ -77,4 +77,20 @@ class HarvestService {
     }
     return todos;
   }
+
+  Future<List<Harvest>> fetchDataPeriode(int id_periode) async {
+    //returns the memos as a list (array)
+
+    final db = await _dbHelper.init();
+    final sql = '''SELECT * FROM harvest WHERE id_periode = $id_periode''';
+    final maps = await db
+        .rawQuery(sql); //query all the rows in a table as an array of maps
+
+    List<Harvest> todos = [];
+    for (final node in maps) {
+      final todo = Harvest.fromMap(node);
+      todos.add(todo);
+    }
+    return todos;
+  }
 }

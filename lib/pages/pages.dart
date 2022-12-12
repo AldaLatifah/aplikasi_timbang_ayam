@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_getx_reactive_ble/detail_page.dart';
@@ -26,3 +27,4 @@ part 'display_result_camera_page.dart';
 part 'cage_page.dart';
 part 'period_page.dart';
 part 'create_sppa_page.dart';
+part 'sppa_page.dart';
