@@ -13,3 +13,4 @@ part 'scale_service.dart';
 part 'schedule_service.dart';
 part 'sppa_service.dart';
 part 'period_service.dart';
+part 'harverst_service.dart';

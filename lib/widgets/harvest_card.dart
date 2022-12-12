@@ -3,15 +3,22 @@
 part of 'widgets.dart';
 
 class HarvestCard extends StatelessWidget {
-  const HarvestCard({Key? key}) : super(key: key);
+  final Harvest harvest;
+  const HarvestCard({Key? key, required this.harvest}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+    var formatter = new DateFormat('dd-MM-yyyy');
+    var tglpanen = DateTime.parse(harvest.dummytgl);
+
     return Column(
       children: [
         InkWell(
           onTap: () {
-            Get.to(HarvestPage());
+            Get.to(HarvestPage(
+              harvest: harvest,
+            ));
             // Navigator.push(context, MaterialPageRoute(builder: (context) {
             //   return HarvestPage();
             // }));
@@ -31,7 +38,7 @@ class HarvestCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Panen",
+                        harvest.name,
                         style: GoogleFonts.poppins(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
@@ -44,7 +51,7 @@ class HarvestCard extends StatelessWidget {
                           borderRadius: BorderRadius.all(Radius.circular(8)),
                         ),
                         child: Text(
-                          "2 hari lagi",
+                          "... hari lagi",
                           textAlign: TextAlign.center,
                           style: GoogleFonts.poppins(
                             color: Color(0xff78A18D),
@@ -56,7 +63,7 @@ class HarvestCard extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    "Tanggal 23 November 2022",
+                    harvest.tglPanen,
                     style: GoogleFonts.poppins(
                       color: Colors.white,
                       fontWeight: FontWeight.w300,

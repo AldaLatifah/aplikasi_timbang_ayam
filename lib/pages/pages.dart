@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_getx_reactive_ble/detail_page.dart';
@@ -23,3 +24,5 @@ part 'harverst_page.dart';
 part 'camera_page.dart';
 part 'display_result_camera_page.dart';
 part 'cage_page.dart';
+part 'period_page.dart';
+part 'create_sppa_page.dart';

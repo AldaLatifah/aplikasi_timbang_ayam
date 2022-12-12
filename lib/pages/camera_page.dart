@@ -2,7 +2,9 @@ part of 'pages.dart';
 
 class CameraPage extends StatefulWidget {
   final CameraDescription camera;
-  const CameraPage({Key? key, required this.camera}) : super(key: key);
+  final int id_sppa;
+  const CameraPage({Key? key, required this.camera, required this.id_sppa})
+      : super(key: key);
   @override
   State<CameraPage> createState() => _CameraPageState();
 }
@@ -124,6 +126,7 @@ class _CameraPageState extends State<CameraPage> {
             if (!mounted) return;
             await Get.off(
               DisplayResultCameraPage(
+                id_sppa: widget.id_sppa,
                 imagePath: image.path,
                 weight: c.weight.toString(),
               ),

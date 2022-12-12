@@ -2,21 +2,22 @@
 
 part of 'pages.dart';
 
-class CagePage extends StatefulWidget {
-  final Cage cage;
-  const CagePage({Key? key, required this.cage}) : super(key: key);
+class PeriodPage extends StatefulWidget {
+  final Period period;
+  const PeriodPage({Key? key, required this.period}) : super(key: key);
 
   @override
-  State<CagePage> createState() => _CagePageState();
+  State<PeriodPage> createState() => _PeriodPageState();
 }
 
-class _CagePageState extends State<CagePage> {
-  PeriodService periodService = PeriodService();
+class _PeriodPageState extends State<PeriodPage> {
+  HarvestService harvestService = HarvestService();
   TextEditingController namaPeriodController = TextEditingController();
-  TextEditingController tglAwalPeriodController = TextEditingController();
+  TextEditingController tglPanenController = TextEditingController();
   TextEditingController tglAkhirPeriodController = TextEditingController();
   DateTime tanggal = DateTime.now();
   DateTime tgl = DateTime.now();
+  late String dummytgl;
 
   @override
   void initState() {
@@ -25,17 +26,17 @@ class _CagePageState extends State<CagePage> {
     super.initState();
   }
 
-  late Future<List<Period>> period;
+  late Future<List<Harvest>> harvest;
   void refreshPeriod() {
     setState(() {
-      period = periodService.fetchMemos();
+      harvest = harvestService.fetchMemos();
     });
   }
 
   //POPUP DIALOG TAMBAH DATA KANDANG
   Widget _buildPopupDialog(BuildContext context) {
     return AlertDialog(
-      title: const Text('Tambah Data Periode'),
+      title: const Text('Tambah Data Panen'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +52,7 @@ class _CagePageState extends State<CagePage> {
               ),
               decoration: InputDecoration(
                 icon: Icon(Icons.abc),
-                hintText: 'Tulis Nama Periode',
+                hintText: 'Tulis Nama Panen',
                 labelStyle: GoogleFonts.poppins(
                   color: Colors.grey,
                   fontSize: 15,
@@ -69,14 +70,14 @@ class _CagePageState extends State<CagePage> {
           Padding(
             padding: EdgeInsets.only(left: 2.0),
             child: TextField(
-              controller: tglAwalPeriodController,
+              controller: tglPanenController,
               style: GoogleFonts.poppins(
                 color: Colors.grey,
                 fontSize: 15,
                 fontWeight: FontWeight.w300,
               ),
               decoration: InputDecoration(
-                hintText: 'Tanggal Awal Periode',
+                hintText: 'Tanggal Panen',
                 labelStyle: GoogleFonts.poppins(
                   color: Colors.grey,
                   fontSize: 15,
@@ -97,68 +98,15 @@ class _CagePageState extends State<CagePage> {
                     lastDate: DateTime(2101));
 
                 if (pickedDate != null) {
-                  print(
-                      pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                  dummytgl = pickedDate.toString();
+                  //pickedDate output format => 2021-03-10 00:00:00.000
                   String formattedDate =
                       DateFormat('dd-MM-yyyy').format(pickedDate);
-                  print(
-                      formattedDate); //formatted date output using intl package =>  2021-03-16
+                  //formatted date output using intl package =>  2021-03-16
                   //you can implement different kind of Date Format here according to your requirement
 
                   setState(() {
-                    tglAwalPeriodController.text =
-                        formattedDate; //set output date to TextField value.
-                  });
-                } else {
-                  print("Date is not selected");
-                }
-              },
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 2.0),
-            child: TextField(
-              controller: tglAkhirPeriodController,
-              style: GoogleFonts.poppins(
-                color: Colors.grey,
-                fontSize: 15,
-                fontWeight: FontWeight.w300,
-              ),
-              decoration: InputDecoration(
-                hintText: 'Tanggal Akhir Periode',
-                labelStyle: GoogleFonts.poppins(
-                  color: Colors.grey,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w300,
-                ),
-                icon: Icon(Icons.calendar_today),
-                border: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
-                ),
-              ),
-              readOnly: true,
-              onTap: () async {
-                DateTime? pickedDate = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(
-                        2000), //DateTime.now() - not to allow to choose before today.
-                    lastDate: DateTime(2101));
-
-                if (pickedDate != null) {
-                  print(
-                      pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
-                  String formattedDate =
-                      DateFormat('dd-MM-yyyy').format(pickedDate);
-                  print(
-                      formattedDate); //formatted date output using intl package =>  2021-03-16
-                  //you can implement different kind of Date Format here according to your requirement
-
-                  setState(() {
-                    tglAkhirPeriodController.text =
+                    tglPanenController.text =
                         formattedDate; //set output date to TextField value.
                   });
                 } else {
@@ -176,22 +124,25 @@ class _CagePageState extends State<CagePage> {
         ),
         TextButton(
           onPressed: () async {
-            await periodService.addItem(
-              Period(
+            // print("tes");
+            // print(tglPanenController.text);
+            // print(dummytgl);
+            await harvestService.addItem(
+              Harvest(
                 namaPeriodController.text,
-                tglAwalPeriodController.text,
-                tglAkhirPeriodController.text,
-                widget.cage.id,
+                tglPanenController.text,
+                dummytgl,
+                widget.period.id_cage,
+                widget.period.id,
               ),
             );
-            print("tes");
-            // Get.off(CagePage(cage: widget.cage));
+
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (_) {
-                  return CagePage(
-                    cage: widget.cage,
+                  return PeriodPage(
+                    period: widget.period,
                   );
                 },
               ),
@@ -233,7 +184,7 @@ class _CagePageState extends State<CagePage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 24.0),
                         child: Text(
-                          "${widget.cage.name}",
+                          "${widget.period.name}",
                           style: GoogleFonts.poppins(
                             fontSize: 36,
                             fontWeight: FontWeight.w700,
@@ -244,7 +195,7 @@ class _CagePageState extends State<CagePage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 24.0),
                         child: Text(
-                          "Lantai ${widget.cage.lantai} ",
+                          "Tanggal ${widget.period.tglawal} -  ${widget.period.tglakhir}",
                           style: GoogleFonts.poppins(
                               fontSize: 16,
                               fontWeight: FontWeight.w300,
@@ -266,7 +217,7 @@ class _CagePageState extends State<CagePage> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            'Data Periode',
+                            'Data Panen',
                             style: GoogleFonts.poppins(
                               color: Color(0xff386829),
                               fontSize: 18,
@@ -302,7 +253,7 @@ class _CagePageState extends State<CagePage> {
                                     width: 6,
                                   ),
                                   Text(
-                                    'Tambah Periode',
+                                    'Tambah Panen',
                                     style: GoogleFonts.poppins(
                                       color: Colors.white,
                                       fontSize: 12,
@@ -318,14 +269,14 @@ class _CagePageState extends State<CagePage> {
                     ),
                   ],
                 ),
-                FutureBuilder<List<Period>>(
-                  future: period,
+                FutureBuilder<List<Harvest>>(
+                  future: harvest,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return Column(
                           children: snapshot.data!
-                              .map((todo) => PeriodCard(
-                                    period: todo,
+                              .map((todo) => HarvestListCard(
+                                    harvest: todo,
                                   ))
                               .toList());
                     } else {

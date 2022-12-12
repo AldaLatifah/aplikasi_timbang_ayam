@@ -14,7 +14,9 @@ class PeriodCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: InkWell(
-        onTap: () async {},
+        onTap: () async {
+          Get.to(PeriodPage(period: period));
+        },
         child: Column(
           children: [
             Row(

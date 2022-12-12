@@ -2,8 +2,30 @@
 
 part of 'pages.dart';
 
-class HarvestPage extends StatelessWidget {
-  const HarvestPage({Key? key}) : super(key: key);
+class HarvestPage extends StatefulWidget {
+  final Harvest harvest;
+  const HarvestPage({Key? key, required this.harvest}) : super(key: key);
+
+  @override
+  State<HarvestPage> createState() => _HarvestPageState();
+}
+
+class _HarvestPageState extends State<HarvestPage> {
+  SppaService sppaService = SppaService();
+  @override
+  void initState() {
+    // TODO: implement initState
+    refreshPeriod();
+    super.initState();
+  }
+
+  late Future<List<Sppa>> sppa;
+
+  void refreshPeriod() {
+    setState(() {
+      sppa = sppaService.fetchMemos();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +60,7 @@ class HarvestPage extends StatelessWidget {
                       height: 10,
                     ),
                     Text(
-                      "Panen",
+                      widget.harvest.name,
                       style: GoogleFonts.poppins(
                         fontSize: 36,
                         fontWeight: FontWeight.w700,
@@ -46,7 +68,7 @@ class HarvestPage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "Tanggal 23 November 2022",
+                      widget.harvest.tglPanen,
                       style: GoogleFonts.poppins(
                           fontSize: 16,
                           fontWeight: FontWeight.w300,
@@ -77,7 +99,11 @@ class HarvestPage extends StatelessWidget {
                       ),
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Get.to(CreateSppaPage(
+                          harvest: widget.harvest,
+                        ));
+                      },
                       child: Container(
                         decoration: BoxDecoration(
                           color: Color(0xff386829),
@@ -113,9 +139,20 @@ class HarvestPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: HarvestDetailCard(),
+                FutureBuilder<List<Sppa>>(
+                  future: sppa,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Column(
+                          children: snapshot.data!
+                              .map((todo) => HarvestDetailCard(
+                                    sppa: todo,
+                                  ))
+                              .toList());
+                    } else {
+                      return SizedBox();
+                    }
+                  },
                 )
               ],
             )

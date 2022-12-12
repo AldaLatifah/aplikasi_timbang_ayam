@@ -10,9 +10,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   CageService cageService = CageService();
+  HarvestService harvestService = HarvestService();
   TextEditingController namaKandangController = TextEditingController();
   TextEditingController lantaiKandangController = TextEditingController();
   int? _selectedIndex, index;
+  bool tampilPanen = false;
 
   @override
   void initState() {
@@ -27,6 +29,13 @@ class _HomePageState extends State<HomePage> {
       cage = cageService.fetchMemos();
     });
   }
+
+  late Future<List<Harvest>> harvest;
+  // void refreshHarvest() {
+  //   setState(() {
+  //     harvest = harvestService.fetchMemos();
+  //   });
+  // }
 
   //POPUP DIALOG TAMBAH DATA KANDANG
   Widget _buildPopupDialog(BuildContext context) {
@@ -135,6 +144,8 @@ class _HomePageState extends State<HomePage> {
             onTap: () {
               setState(() {
                 _selectedIndex = cage.id;
+                tampilPanen = true;
+                harvest = harvestService.fetchData(cage.id);
               });
             },
             child: Container(
@@ -431,26 +442,25 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(
                               height: 10,
                             ),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: [
-                                  HarvestCard(),
-                                  SizedBox(
-                                    width: 15,
-                                  ),
-                                  HarvestCard(),
-                                  SizedBox(
-                                    width: 15,
-                                  ),
-                                  HarvestCard(),
-                                  SizedBox(
-                                    width: 15,
-                                  ),
-                                  HarvestCard(),
-                                ],
-                              ),
-                            ),
+                            tampilPanen == true
+                                ? SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: FutureBuilder<List<Harvest>>(
+                                      future: harvest,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          return Row(
+                                              children: snapshot.data!
+                                                  .map((todo) => HarvestCard(
+                                                      harvest: todo))
+                                                  .toList());
+                                        } else {
+                                          return SizedBox();
+                                        }
+                                      },
+                                    ))
+                                : Text(
+                                    "silahkan pilih data kandang terlebih dahulu")
                           ],
                         ),
                       )

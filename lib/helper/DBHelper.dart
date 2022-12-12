@@ -27,6 +27,38 @@ class DBHelper {
           tglawal DATETIME,
           tglakhir DATETIME,
           id_cage INTEGER)""");
+
+      await db.execute("""
+          CREATE TABLE harvest (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT,
+          tglPanen DATETIME,
+          dummytgl DATETIME,
+          id_cage INTEGER,
+          id_periode INTEGER)""");
+
+      await db.execute("""
+          CREATE TABLE sppa (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          no_sppa TEXT,
+          peternak TEXT,
+          customer TEXT,
+          ekor INTEGER,
+          kg INTEGER,
+          alamat TEXT,
+          no_truk TEXT,
+          nama_sopir TEXT,
+          tgl DATETIME,
+          jam DATETIME,
+          id_harvest INTEGER)""");
+
+      await db.execute("""
+          CREATE TABLE detail_scale (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          ekor INTEGER,
+          kg INTEGER,
+          foto TEXT,
+          id_sppa INTEGER)""");
     });
   }
 }

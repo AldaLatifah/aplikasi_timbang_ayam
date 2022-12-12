@@ -12,3 +12,4 @@ part 'cage_card.dart';
 part 'harvest_card.dart';
 part 'harvest_detail_card.dart';
 part 'period_card.dart';
+part 'harvest_list_card.dart';
