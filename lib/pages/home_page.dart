@@ -130,7 +130,7 @@ class _HomePageState extends State<HomePage> {
               context,
               MaterialPageRoute(
                 builder: (_) {
-                  return HomePage();
+                  return MainPage();
                 },
               ),
             );

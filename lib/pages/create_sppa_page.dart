@@ -41,7 +41,7 @@ class _CreateSppaPageState extends State<CreateSppaPage> {
                   children: [
                     InkWell(
                       onTap: () {
-                        Get.offAll(() => HomePage());
+                        Get.offAll(() => MainPage());
                       },
                       child: const Icon(
                         Icons.arrow_left,
